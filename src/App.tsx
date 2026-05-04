@@ -109,6 +109,9 @@ export const App: React.FC = () => {
     setErrorMessage(ErrorMessages.None);
 
     const completedTodos = todos.filter(todo => todo.completed);
+    const completedIds = completedTodos.map(todo => todo.id);
+
+    setUpdatingTodoId(prev => [...prev, ...completedIds]);
 
     const requests = completedTodos.map(todo =>
       todoService.deleteTodo(todo.id),
@@ -131,6 +134,8 @@ export const App: React.FC = () => {
             ),
         ),
       );
+
+      setUpdatingTodoId(prev => prev.filter(id => !completedIds.includes(id)));
 
       if (hasError) {
         showError(ErrorMessages.DeleteTodo);
